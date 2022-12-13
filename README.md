@@ -9,7 +9,7 @@ APP de exemplo para utilizar o SQLite com Xamarin.Forms
 <li>Flurl</li>
 <li>ACR.Userdialogs</li>
 <li>Xamarin.Forms</li>
-
+<li>MVVM Helpers</li>
 </ul>
 
 
