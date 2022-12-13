@@ -144,12 +144,6 @@ namespace SiggaTechAPP.ViewModels
         {
             try
             {
-                if (!InternetConnectionActive())
-                {
-                    await DisplayAlert("SiggaTech", "Could not load local database. Check your connection and try again.", "OK!");
-                    return;
-                }
-
                 UserDialogs.Instance.ShowLoading("Loading Local Database, wait...", MaskType.Black);
                 IFolder folder = new LocalRootFolder();
                 ExistenceCheckResult fileExists = await folder.CheckExistsAsync("SiggaTech.db3");
@@ -186,6 +180,12 @@ namespace SiggaTechAPP.ViewModels
         {
             try
             {
+                if (!InternetConnectionActive())
+                {
+                    await DisplayAlert("SiggaTech", "Could not load local database. Check your connection and try again.", "OK!");
+                    return;
+                }
+
                 var result = await _flurlAPI.GetAllItemsAsync("users");
 
                 foreach(var item in result)
