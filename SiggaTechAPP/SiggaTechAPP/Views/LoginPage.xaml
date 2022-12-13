@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SiggaTechAPP.Views.LoginPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:SiggaTechAPP.CustomRenderer"
+    xmlns:vm="clr-namespace:SiggaTechAPP.ViewModels"
+    x:DataType="vm:LoginViewModel"
+    BackgroundColor="#FFFFFF"
+    NavigationPage.HasNavigationBar="False">
+
+    <Grid
+        Margin="24,0"
+        Padding="0"
+        RowDefinitions="Auto,*"
+        RowSpacing="0">
+        <!--  top controls  -->
+        <Image
+            Grid.Row="0"
+            Margin="0,150,0,0"
+            Aspect="AspectFit"
+            BackgroundColor="Transparent"
+            HorizontalOptions="CenterAndExpand"
+            Source="logo"
+            WidthRequest="128" />
+        <StackLayout
+            Grid.Row="1"
+            Margin="0,50"
+            Padding="0"
+            Spacing="20">
+            <controls:RoundedEntry
+                x:Name="txtEmail"
+                HeightRequest="40"
+                Keyboard="Email"
+                Placeholder="E-mail"
+                PlaceholderColor="#064169"
+                Text="{Binding Email}"
+                TextColor="#064169" />
+            <controls:RoundedEntry
+                x:Name="txtSenha"
+                HeightRequest="40"
+                IsPassword="True"
+                Keyboard="Default"
+                Placeholder="Senha"
+                PlaceholderColor="#064169"
+                Text="{Binding Password}"
+                TextColor="#064169" />
+
+            <!--  middle controls  -->
+            <Button
+                x:Name="btnLogin"
+                Margin="0,30,0,0"
+                Padding="30,0"
+                BackgroundColor="#064169"
+                Command="{Binding LoginCommand}"
+                CornerRadius="20"
+                HeightRequest="45"
+                Text="Login"
+                TextColor="#FFFFFF"
+                WidthRequest="120" />
+        </StackLayout>
+    </Grid>
+
+
+</ContentPage>

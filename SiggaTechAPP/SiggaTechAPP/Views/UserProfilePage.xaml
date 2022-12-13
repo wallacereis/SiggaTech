@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SiggaTechAPP.Views.UserProfilePage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:SiggaTechAPP.Models"
+    xmlns:vm="clr-namespace:SiggaTechAPP.ViewModels"
+    x:DataType="vm:UserProfileViewModel"
+    BackgroundColor="#FFFFFF"
+    NavigationPage.HasNavigationBar="False">
+
+    <StackLayout Margin="24,0" Spacing="10">
+
+        <Grid
+            Margin="0,10"
+            ColumnDefinitions="Auto,*"
+            ColumnSpacing="0"
+            RowDefinitions="Auto,Auto,*"
+            RowSpacing="0">
+            <Image
+                Grid.RowSpan="3"
+                Grid.Column="0"
+                Aspect="AspectFit"
+                HeightRequest="48"
+                Source="user"
+                VerticalOptions="Start"
+                WidthRequest="48" />
+            <Label
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="24,5,0,0"
+                FontAttributes="Bold"
+                FontSize="16"
+                Text="{Binding UserProfile.Name}"
+                TextColor="#064169"
+                VerticalOptions="Center" />
+            <Label
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="24,0,0,0"
+                FontSize="14"
+                Text="{Binding UserProfile.Email}"
+                TextColor="#064169" />
+            <BoxView
+                Grid.Row="2"
+                Grid.ColumnSpan="2"
+                Margin="0,15,0,0"
+                BackgroundColor="#064169"
+                HeightRequest="0.5" />
+        </Grid>
+
+        <StackLayout Margin="0,-10" Spacing="0">
+            <Label
+                FontAttributes="Bold"
+                FontSize="18"
+                Text="Posts"
+                TextColor="#064169"
+                VerticalOptions="Center" />
+            <BoxView BackgroundColor="#064169" HeightRequest="0.3" />
+        </StackLayout>
+
+        <CollectionView
+            x:Name="usersCollectionView"
+            Margin="0,15"
+            EmptyView="No items to display"
+            ItemsSource="{Binding Posts}"
+            SelectionMode="Single">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" VerticalItemSpacing="10" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.HeaderTemplate>
+                <DataTemplate>
+                    <Label
+                        Margin="10,0,0,0"
+                        FontAttributes="Bold"
+                        Text="Posts"
+                        TextColor="#064169" />
+                </DataTemplate>
+            </CollectionView.HeaderTemplate>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Post">
+                    <Frame
+                        Padding="0"
+                        BackgroundColor="Transparent"
+                        BorderColor="#064169"
+                        CornerRadius="4"
+                        HasShadow="False">
+                        <StackLayout Margin="24,10" Spacing="0">
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding PostTitle}"
+                                TextColor="#064169" />
+                            <Label Text="{Binding Body}" TextColor="#064169" />
+                        </StackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!--  Bottom controls  -->
+        <Button
+            x:Name="btnGoBack"
+            Margin="0,10"
+            BackgroundColor="#064169"
+            Command="{Binding ReturnCommand, Mode=OneTime}"
+            CornerRadius="20"
+            HeightRequest="45"
+            HorizontalOptions="CenterAndExpand"
+            Text="Go Back"
+            TextColor="#FFFFFF"
+            VerticalOptions="End"
+            WidthRequest="120" />
+
+    </StackLayout>
+
+</ContentPage>
