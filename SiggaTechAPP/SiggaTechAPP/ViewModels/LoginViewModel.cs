@@ -42,7 +42,6 @@ namespace SiggaTechAPP.ViewModels
         private readonly IDialogService _dialogService;
 
         private readonly UserValidator _validator;
-        Company lastSelection;
         #endregion
 
         #region Commands
