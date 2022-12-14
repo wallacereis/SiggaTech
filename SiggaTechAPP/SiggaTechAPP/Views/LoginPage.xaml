@@ -34,7 +34,7 @@
                 Keyboard="Email"
                 Placeholder="E-mail"
                 PlaceholderColor="#064169"
-                Text="{Binding Email}"
+                Text="{Binding User.Email}"
                 TextColor="#064169" />
             <controls:RoundedEntry
                 x:Name="txtSenha"
@@ -43,7 +43,7 @@
                 Keyboard="Default"
                 Placeholder="Senha"
                 PlaceholderColor="#064169"
-                Text="{Binding Password}"
+                Text="{Binding User.UserName}"
                 TextColor="#064169" />
 
             <!--  middle controls  -->

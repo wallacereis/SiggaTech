@@ -14,25 +14,19 @@ using MvvmHelpers.Commands;
 using Acr.UserDialogs;
 using MvvmHelpers.Interfaces;
 using System.Collections.Generic;
+using SiggaTechAPP.Validators;
 
 namespace SiggaTechAPP.ViewModels
 {
     sealed class LoginViewModel : BasePageViewModel
     {
         #region Properties
-        /*---------------------- Email Properties ----------------------*/
-        private string _email;
-        public string Email
+        /*---------------------- User Properties ----------------------*/
+        private User _user;
+        public User User
         {
-            get { return _email; }
-            set { SetProperty(ref _email, value); }
-        }
-        /*---------------------- Password Properties ----------------------*/
-        private string _password;
-        public string Password
-        {
-            get { return _password; }
-            set { SetProperty(ref _password, value); }
+            get { return _user; }
+            set { SetProperty(ref _user, value); }
         }
         #endregion
 
@@ -46,6 +40,8 @@ namespace SiggaTechAPP.ViewModels
         private readonly ISQLiteRetositoryBase<Company> _repositoryCompany;
         private readonly ISQLiteRetositoryBase<Post> _repositoryPost;
         private readonly IDialogService _dialogService;
+
+        private readonly UserValidator _validator;
         Company lastSelection;
         #endregion
 
@@ -65,6 +61,9 @@ namespace SiggaTechAPP.ViewModels
             _repositoryCompany = DependencyService.Get<ISQLiteRetositoryBase<Company>>();
             _repositoryPost = DependencyService.Get<ISQLiteRetositoryBase<Post>>();
             _dialogService = DependencyService.Get<IDialogService>();
+
+            User = new User();
+            _validator = new UserValidator();
         }
         #endregion
 
@@ -82,15 +81,17 @@ namespace SiggaTechAPP.ViewModels
             try
             {
                 UserDialogs.Instance.ShowLoading("Processing, wait...", MaskType.Black);
-                if (!UserLoginIsValid())
-                {
-                    _dialogService.ShowToast("Por favor, informe o E-mail e a Senha!");
-                    return;
-                }
 
-                if (!UserEmailIsValid())
+                var result = _validator.Validate(User);
+
+                if (!result.IsValid)
                 {
-                    _dialogService.ShowToast("Por favor, informe um E-mail válido!");
+                    var errors = "";
+                    foreach (var failure in result.Errors)
+                    {
+                        errors += $"{failure.ErrorMessage}" + Environment.NewLine;
+                    }
+                    await DisplayAlert("SiggaTech", errors, "OK!");
                     return;
                 }
 
@@ -102,9 +103,9 @@ namespace SiggaTechAPP.ViewModels
 
                 List<User> user = null;
                 if (InternetConnectionActive()) 
-                    user = await _flurlAPI.GetItemByLoginAsync("users", Email, Password);
+                    user = await _flurlAPI.GetItemByLoginAsync("users", User.Email, User.UserName);
                 else
-                    user = await _repositoryUser.GetAllItemsAsync<User>(u => u.Email == Email && u.UserName == Password);
+                    user = await _repositoryUser.GetAllItemsAsync<User>(u => u.Email == User.Email && u.UserName == User.UserName);
                 
                 if (user.Count == 0)
                 {
@@ -125,19 +126,9 @@ namespace SiggaTechAPP.ViewModels
             }
         }
 
-        private bool UserLoginIsValid()
-        {
-            return !string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(Password);
-        }
-
-        private bool UserEmailIsValid()
-        {
-            return Regex.IsMatch(Email.Trim(), @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z", RegexOptions.IgnoreCase);
-        }
-
         private bool LoginSiggaIsValid()
         {
-            return Email == "contato@sigga.com" && Password == "sigga@123";
+            return User.Email == "contato@sigga.com" && User.UserName == "sigga@123";
         }
 
         private async Task CreateTablesSQLiteAsync()
