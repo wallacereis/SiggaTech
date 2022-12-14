@@ -10,6 +10,7 @@ APP de exemplo para utilizar o SQLite com Xamarin.Forms
 <li>ACR.Userdialogs</li>
 <li>Xamarin.Forms</li>
 <li>MVVM Helpers</li>
+<li>FluentValidation</li>
 </ul>
 
 
