@@ -1,5 +1,4 @@
-﻿using Acr.UserDialogs;
-using SiggaTechAPP.Models;
+﻿using SiggaTechAPP.Models;
 using SiggaTechAPP.Interfaces;
 using SiggaTechAPP.ViewModels.Base;
 using System;
@@ -39,6 +38,7 @@ namespace SiggaTechAPP.ViewModels
 
         #region Commands
         public IAsyncCommand ReturnCommand => new AsyncCommand(() => ReturnCommandExecuteAsync());
+        public IAsyncCommand RefreshingCommand => new AsyncCommand(() => RefreshingCommandExecuteAsync());
         #endregion
 
         #region Constructor        
@@ -65,7 +65,8 @@ namespace SiggaTechAPP.ViewModels
         {
             try
             {
-                UserDialogs.Instance.ShowLoading("Processing, wait...", MaskType.Black);
+                IsBusy = true;
+
                 List<Post> listPosts = null;
 
                 if (InternetConnectionActive())
@@ -80,13 +81,18 @@ namespace SiggaTechAPP.ViewModels
             }
             catch (Exception ex)
             {
-                UserDialogs.Instance.HideLoading();
+                IsBusy = false;
                 _dialogService.ShowToast(ex.Message);
             }
             finally
             {
-                UserDialogs.Instance.HideLoading();
+                IsBusy = false;
             }
+        }
+
+        private async Task RefreshingCommandExecuteAsync()
+        {
+            await LoadPostsUserAsync(UserProfile);
         }
 
         private async Task ReturnCommandExecuteAsync()

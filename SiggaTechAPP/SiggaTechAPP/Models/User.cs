@@ -32,5 +32,10 @@ namespace SiggaTechAPP.Models
         {
             Posts = new List<Post>();
         }
+
+        [Ignore]
+        public bool IsOnline { get; set; }
+        [Ignore]
+        public ImageSource ImageSource => IsOnline ? "user.png" : "avatar.png";
     }
 }

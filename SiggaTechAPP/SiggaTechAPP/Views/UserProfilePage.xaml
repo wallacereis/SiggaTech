@@ -22,7 +22,7 @@
                 Grid.Column="0"
                 Aspect="AspectFit"
                 HeightRequest="48"
-                Source="user"
+                Source="{Binding UserProfile.ImageSource}"
                 VerticalOptions="Start"
                 WidthRequest="48" />
             <Label
@@ -59,43 +59,48 @@
             <BoxView BackgroundColor="#064169" HeightRequest="0.3" />
         </StackLayout>
 
-        <CollectionView
-            x:Name="usersCollectionView"
-            Margin="0,15"
-            EmptyView="No items to display"
-            ItemsSource="{Binding Posts}"
-            SelectionMode="Single">
-            <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Vertical" VerticalItemSpacing="10" />
-            </CollectionView.ItemsLayout>
-            <CollectionView.HeaderTemplate>
-                <DataTemplate>
-                    <Label
-                        Margin="10,0,0,0"
-                        FontAttributes="Bold"
-                        Text="Posts"
-                        TextColor="#064169" />
-                </DataTemplate>
-            </CollectionView.HeaderTemplate>
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:Post">
-                    <Frame
-                        Padding="0"
-                        BackgroundColor="Transparent"
-                        BorderColor="#064169"
-                        CornerRadius="4"
-                        HasShadow="False">
-                        <StackLayout Margin="24,10" Spacing="0">
-                            <Label
-                                FontAttributes="Bold"
-                                Text="{Binding PostTitle}"
-                                TextColor="#064169" />
-                            <Label Text="{Binding Body}" TextColor="#064169" />
-                        </StackLayout>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+        <RefreshView
+            Command="{Binding RefreshingCommand, Mode=OneTime}"
+            IsRefreshing="{Binding IsBusy}"
+            RefreshColor="#064169">
+            <CollectionView
+                x:Name="usersCollectionView"
+                Margin="0,15"
+                EmptyView="No items to display"
+                ItemsSource="{Binding Posts}"
+                SelectionMode="Single">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" VerticalItemSpacing="10" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.HeaderTemplate>
+                    <DataTemplate>
+                        <Label
+                            Margin="10,0,0,0"
+                            FontAttributes="Bold"
+                            Text="Posts"
+                            TextColor="#064169" />
+                    </DataTemplate>
+                </CollectionView.HeaderTemplate>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Post">
+                        <Frame
+                            Padding="0"
+                            BackgroundColor="Transparent"
+                            BorderColor="#064169"
+                            CornerRadius="4"
+                            HasShadow="False">
+                            <StackLayout Margin="24,10" Spacing="0">
+                                <Label
+                                    FontAttributes="Bold"
+                                    Text="{Binding PostTitle}"
+                                    TextColor="#064169" />
+                                <Label Text="{Binding Body}" TextColor="#064169" />
+                            </StackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
 
         <!--  Bottom controls  -->
         <Button

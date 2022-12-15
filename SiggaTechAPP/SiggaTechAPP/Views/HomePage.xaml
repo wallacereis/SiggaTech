@@ -12,66 +12,88 @@
     <StackLayout Margin="24,0" Spacing="10">
 
         <StackLayout Margin="0,20" Spacing="0">
-            <Label
-                FontAttributes="Bold"
-                FontSize="18"
-                Text="{Binding Title}"
-                TextColor="#064169"
-                VerticalOptions="Center" />
+            <Grid
+                ColumnDefinitions="*,Auto"
+                ColumnSpacing="0"
+                RowSpacing="0">
+                <Label
+                    Grid.Column="0"
+                    FontAttributes="Bold"
+                    FontSize="18"
+                    Text="{Binding Title}"
+                    TextColor="#064169"
+                    VerticalOptions="Start" />
+                <Label
+                    Grid.Column="1"
+                    FontAttributes="Bold"
+                    FontSize="22"
+                    Text="X"
+                    TextColor="#064169"
+                    VerticalOptions="End">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding LogoutCommand, Mode=OneTime}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
             <BoxView BackgroundColor="#064169" HeightRequest="0.3" />
         </StackLayout>
 
-        <CollectionView
-            x:Name="usersCollectionView"
-            EmptyView="No items to display"
-            ItemsSource="{Binding Users}"
-            SelectionChangedCommand="{Binding SelectionChangedCommand}"
-            SelectionChangedCommandParameter="{Binding SelectedItem, Source={x:Reference usersCollectionView}}"
-            SelectionMode="Single">
-            <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Vertical" VerticalItemSpacing="20" />
-            </CollectionView.ItemsLayout>
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:User">
+        <RefreshView
+            Command="{Binding RefreshingCommand, Mode=OneTime}"
+            IsRefreshing="{Binding IsBusy}"
+            RefreshColor="#064169">
+            <CollectionView
+                x:Name="usersCollectionView"
+                EmptyView="No items to display"
+                ItemsSource="{Binding Users}"
+                SelectionChangedCommand="{Binding SelectionChangedCommand}"
+                SelectionChangedCommandParameter="{Binding SelectedItem, Source={x:Reference usersCollectionView}}"
+                SelectionMode="Single">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" VerticalItemSpacing="20" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:User">
 
-                    <Grid
-                        ColumnDefinitions="Auto,*"
-                        ColumnSpacing="0"
-                        RowDefinitions="Auto,Auto,*"
-                        RowSpacing="0">
-                        <Image
-                            Grid.RowSpan="3"
-                            Grid.Column="0"
-                            Aspect="AspectFit"
-                            HeightRequest="48"
-                            Source="user"
-                            VerticalOptions="Start"
-                            WidthRequest="48" />
-                        <Label
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Margin="24,0,0,0"
-                            FontAttributes="Bold"
-                            FontSize="16"
-                            Text="{Binding Name}"
-                            TextColor="#064169"
-                            VerticalOptions="Center" />
-                        <Label
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Margin="24,0,0,0"
-                            FontSize="14"
-                            Text="{Binding Email}"
-                            TextColor="#064169" />
-                        <BoxView
-                            Grid.Row="2"
-                            Grid.ColumnSpan="2"
-                            Margin="0,15,0,0"
-                            BackgroundColor="#064169"
-                            HeightRequest="0.5" />
-                    </Grid>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                        <Grid
+                            ColumnDefinitions="Auto,*"
+                            ColumnSpacing="0"
+                            RowDefinitions="Auto,Auto,*"
+                            RowSpacing="0">
+                            <Image
+                                Grid.RowSpan="3"
+                                Grid.Column="0"
+                                Aspect="AspectFit"
+                                HeightRequest="48"
+                                Source="{Binding ImageSource}"
+                                VerticalOptions="Start"
+                                WidthRequest="48" />
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="24,0,0,0"
+                                FontAttributes="Bold"
+                                FontSize="16"
+                                Text="{Binding Name}"
+                                TextColor="#064169"
+                                VerticalOptions="Center" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="24,0,0,0"
+                                FontSize="14"
+                                Text="{Binding Email}"
+                                TextColor="#064169" />
+                            <BoxView
+                                Grid.Row="2"
+                                Grid.ColumnSpan="2"
+                                Margin="0,15,0,0"
+                                BackgroundColor="#064169"
+                                HeightRequest="0.5" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
     </StackLayout>
 </ContentPage>

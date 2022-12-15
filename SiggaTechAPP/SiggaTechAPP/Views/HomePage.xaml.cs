@@ -14,5 +14,10 @@ namespace SiggaTechAPP.Views
         {
             return true;
         }
+
+        private void RefreshView_Refreshing(object sender, System.EventArgs e)
+        {
+
+        }
     }
 }

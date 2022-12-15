@@ -6,12 +6,10 @@ using SiggaTechAPP.ViewModels.Base;
 using SQLite;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-using System.Text.RegularExpressions;
 using System;
 using System.Linq;
 using SiggaTechAPP.Services.Navigation;
 using MvvmHelpers.Commands;
-using Acr.UserDialogs;
 using MvvmHelpers.Interfaces;
 using System.Collections.Generic;
 using SiggaTechAPP.Validators;
@@ -71,6 +69,7 @@ namespace SiggaTechAPP.ViewModels
         {
             await base.Initialize(args);
             await CreateTablesSQLiteAsync();
+            IsNotBusy = !IsBusy;
         }
         #endregion
 
@@ -79,7 +78,7 @@ namespace SiggaTechAPP.ViewModels
         {
             try
             {
-                UserDialogs.Instance.ShowLoading("Processing, wait...", MaskType.Black);
+                IsBusy = true;
 
                 var result = _validator.Validate(User);
 
@@ -116,12 +115,12 @@ namespace SiggaTechAPP.ViewModels
             }
             catch (Exception ex)
             {
-                UserDialogs.Instance.HideLoading();
+                IsBusy = false;
                 _dialogService.ShowToast(ex.Message);
             }
             finally
             {
-                UserDialogs.Instance.HideLoading();
+                IsBusy = false;
             }
         }
 
@@ -134,7 +133,7 @@ namespace SiggaTechAPP.ViewModels
         {
             try
             {
-                UserDialogs.Instance.ShowLoading("Loading Local Database, wait...", MaskType.Black);
+                IsBusy = true;
                 IFolder folder = new LocalRootFolder();
                 ExistenceCheckResult fileExists = await folder.CheckExistsAsync("SiggaTech.db3");
                 if (fileExists == ExistenceCheckResult.NotFound)
@@ -157,12 +156,12 @@ namespace SiggaTechAPP.ViewModels
             }
             catch (Exception ex)
             {
-                UserDialogs.Instance.HideLoading();
+                IsBusy = false;
                 _dialogService.ShowToast(ex.Message);
             }
             finally
             {
-                UserDialogs.Instance.HideLoading();
+                IsBusy = false;
             }
         }
 

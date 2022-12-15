@@ -21,8 +21,20 @@
             Aspect="AspectFit"
             BackgroundColor="Transparent"
             HorizontalOptions="CenterAndExpand"
+            IsVisible="{Binding IsNotBusy}"
             Source="logo"
             WidthRequest="128" />
+
+        <ActivityIndicator
+            x:Name="activityIndicator"
+            Grid.Row="0"
+            Margin="0,150,0,0"
+            HorizontalOptions="Center"
+            IsRunning="{Binding IsBusy}"
+            IsVisible="{Binding IsBusy}"
+            VerticalOptions="Center"
+            Color="#064169" />
+
         <StackLayout
             Grid.Row="1"
             Margin="0,50"
@@ -58,8 +70,9 @@
                 Text="Login"
                 TextColor="#FFFFFF"
                 WidthRequest="120" />
-        </StackLayout>
-    </Grid>
 
+        </StackLayout>
+
+    </Grid>
 
 </ContentPage>

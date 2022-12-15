@@ -1,5 +1,4 @@
-﻿using Acr.UserDialogs;
-using MvvmHelpers.Commands;
+﻿using MvvmHelpers.Commands;
 using MvvmHelpers.Interfaces;
 using SiggaTechAPP.Models;
 using SiggaTechAPP.Interfaces;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using System.Linq;
 
 namespace SiggaTechAPP.ViewModels
 {
@@ -22,20 +22,6 @@ namespace SiggaTechAPP.ViewModels
             get { return _user; }
             set { SetProperty(ref _user, value); }
         }
-        /*---------------------- IsOnline Properties ----------------------*/
-        private bool _isOnLine;
-        public bool IsOnline
-        {
-            get { return _isOnLine; }
-            set { SetProperty(ref _isOnLine, value); }
-        }
-        /*---------------------- IsOffline Properties ----------------------*/
-        private bool _isOffLine;
-        public bool IsOffline
-        {
-            get { return _isOffLine; }
-            set { SetProperty(ref _isOffLine, value); }
-        }
         #endregion
 
         #region Privates
@@ -46,6 +32,8 @@ namespace SiggaTechAPP.ViewModels
 
         #region Commands
         public IAsyncCommand<User> SelectionChangedCommand => new AsyncCommand<User>((User obj) => SelectionChangedCommandExecuteAsync(obj));
+        public IAsyncCommand RefreshingCommand => new AsyncCommand(() => RefreshingCommandExecuteAsync());
+        public IAsyncCommand LogoutCommand => new AsyncCommand(() => LogoutCommandExecuteAsync());
         #endregion
 
         #region Constructor
@@ -70,9 +58,9 @@ namespace SiggaTechAPP.ViewModels
         {
             try
             {
-                UserDialogs.Instance.ShowLoading("Processing, wait...", MaskType.Black);
+                IsBusy = true;
+
                 List<User> listUsers = null;
-                IsOnline = InternetConnectionActive();
 
                 if (InternetConnectionActive())
                 {
@@ -87,17 +75,23 @@ namespace SiggaTechAPP.ViewModels
                 if (listUsers.Count > 0)
                 {
                     Users = new ObservableCollection<User>(listUsers);
+                    Users.Select(u => {u.IsOnline = InternetConnectionActive(); return u; }).ToList();
                 }
             }
             catch (Exception ex)
             {
-                UserDialogs.Instance.HideLoading();
+                IsBusy = false;
                 _dialogService.ShowToast(ex.Message);
             }
             finally
             {
-                UserDialogs.Instance.HideLoading();
+                IsBusy = false;
             }
+        }
+
+        private async Task RefreshingCommandExecuteAsync()
+        {
+            await LoadUsersAsync();
         }
 
         private async Task SelectionChangedCommandExecuteAsync(User user)
@@ -105,6 +99,10 @@ namespace SiggaTechAPP.ViewModels
             await NavigationService.Navigate<UserProfileViewModel>(user);
         }
 
+        private async Task LogoutCommandExecuteAsync()
+        {
+            await NavigationService.Navigate<LoginViewModel>();
+        }
         #endregion
     }
 }
